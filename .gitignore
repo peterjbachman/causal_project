@@ -9,6 +9,8 @@ causal_project.qmd
 causal_project.pdf
 references.bib
 
+_quarto.yml
+
 # General
 .DS_Store
 .AppleDouble
