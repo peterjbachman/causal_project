@@ -1,0 +1,8 @@
+courts-db==0.10.17
+eyecite==2.5.1
+fast-diff-match-patch==2.0.1
+lxml==4.9.2
+pyahocorasick==2.0.0
+regex==2023.3.23
+reporters-db==3.2.32
+six==1.16.0
