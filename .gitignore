@@ -211,5 +211,4 @@ cython_debug/
 pyvenv.cfg
 .venv
 pip-selfcheck.json
-pull_data/secrets_cl.py
 secrets_cl.py
