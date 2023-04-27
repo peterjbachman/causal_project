@@ -16,7 +16,7 @@ df = df.dropna(subset=["opinion"])
 author_pattern = r"(.*)?(\b\w+),"
 per_curiam = r"(?i)(Per Curiam)"
 
-df["per_curiam"] = df["opinion_author"].str.contains(per_curiam, regex=True, na=False)
+df["per_curiam"] = df["opinion_author"].str.match(per_curiam, na=False)
 df["opinion_author"] = df["opinion_author"].str.extract(author_pattern)[1]
 
 for index, row in df.iterrows():
