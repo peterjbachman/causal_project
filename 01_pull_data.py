@@ -54,9 +54,9 @@ for index, row in cases.iterrows():
         cases_filtered.at[index, "opinion"] = "NA"
         cases_filtered.at[index, "opinion_author"] = "NA"
 
-# idk why it's adding a bunch of NA rows but they're easy to remove
-cases_filtered = cases_filtered.dropna(subset=["casename"])
-cases_filtered = cases_filtered.drop(["Unnamed: 0"], axis=1)
+    # idk why it's adding a bunch of NA rows but they're easy to remove
+    cases_filtered = cases_filtered.dropna(subset=["casename"])
+    cases_filtered = cases_filtered.drop(["Unnamed: 0"], axis=1)
 
 # Save as a new file
 cases_filtered.to_csv("data/uncleaned/case_text.csv")
