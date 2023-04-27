@@ -10,27 +10,18 @@ df = pd.read_csv("data/uncleaned/case_text.csv")
 # Drop unecessary columns and na cases
 df = df.drop(["Unnamed: 0"], axis=1)
 
-# Left with 3,189 cases before any other filtering
+# Left with 3,306 cases before any other filtering
+df = df.dropna(subset=["opinion"])
 
-author_pattern = r"(\b\w+)(,\s(Circuit|Chief|Senior Circuit)\sJudge\b)(?!,).*(:|\.)"
-per_curiam = r"PER CURIAM:"
+author_pattern = r"(.*)?(\b\w+),"
+per_curiam = r"(?i)(Per Curiam)"
+
+df["per_curiam"] = df["opinion_author"].str.contains(per_curiam, regex=True, na=False)
+df["opinion_author"] = df["opinion_author"].str.extract(author_pattern)[1]
 
 for index, row in df.iterrows():
     # Convert all the text from html to plain text
-    opinion = eye.clean_text(row["opinion"], ["html", "all_whitespace"])
-
-    if re.match(per_curiam, opinion):
-        df.at[index, "opinion_author"] = "Per Curiam"
-    else:
-        # Find the opinion author
-        author = re.findall(author_pattern, row["opinion"])
-        # Mark this in the dataset
-        try:
-            df.at[index, "opinion_author"] = author[-1][0]
-        except AttributeError:
-            df.at[index, "opinion_author"] = "NA"
-        except IndexError:
-            df.at[index, "opinion_author"] = "NA"
+    opinion = eye.clean_text(row["opinion"], ["all_whitespace"])
 
     # Get citations and remove some of them from the text so they don't muddle
     # up the topic model
@@ -44,4 +35,9 @@ for index, row in df.iterrows():
 
     df.at[index, "opinion"] = opinion
 
-df.to_csv("data/uncleaned/cases_plain.csv")
+df.to_csv("data/uncleaned/cases_plain.csv", index=False)
+
+# eye.clean_text(df["opinion"][6], ["all_whitespace"])
+
+# # okay maybe I need to split based on line breaks.
+# print(df["opinion"][4].split("\n")[7])
