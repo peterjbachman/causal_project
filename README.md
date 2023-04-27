@@ -18,7 +18,7 @@ pyenv local causal_project
 pip install -r requirements.txt
 ```
 
-Set up R for this project by then running the following:
+Set up R for this project by then running the following in the same terminal:
 
 ```shell
 R
