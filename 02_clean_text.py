@@ -21,10 +21,11 @@ df["opinion_author"] = df["opinion_author"].str.extract(author_pattern)[1]
 
 for index, row in df.iterrows():
     # Convert all the text from html to plain text
-    opinion = eye.clean_text(row["opinion"], ["all_whitespace"])
+    # opinion = eye.clean_text(row["opinion"], ["all_whitespace"])
 
     # Get citations and remove some of them from the text so they don't muddle
     # up the topic model
+    opinion = row["opinion"]
     cites = eye.get_citations(opinion)
 
     for i in cites:
@@ -34,6 +35,8 @@ for index, row in df.iterrows():
             continue
 
     df.at[index, "opinion"] = opinion
+
+df
 
 df.to_csv("data/uncleaned/cases_plain.csv", index=False)
 
