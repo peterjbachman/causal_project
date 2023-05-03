@@ -1,4 +1,7 @@
-df <- read.csv("data/uncleaned/cases_plain.csv")
+library(dplyr)
+
+df <- read.csv("data/uncleaned/cases_plain.csv")  %>%
+  distinct(cite, .keep_all = TRUE)
 
 # Remove cases without a female plaintiff similar to Glynn and Sen 2014\
 # Remove cases without a specific author as well.
@@ -12,8 +15,8 @@ df$is_gender_issue <- ifelse(
 # Set up training and test dataset
 # Evenly split data by gender and non-gender issues
 set.seed(12345)
-df$training[df$is_gender_issue == 1] <- sample(c(0, 1), replace = TRUE)
-df$training[df$is_gender_issue == 0] <- sample(c(0, 1), replace = TRUE)
+df$training[df$is_gender_issue == 1] <- sample(c(0, 1), nrow(df[df$is_gender_issue == 1, ]), replace = TRUE)
+df$training[df$is_gender_issue == 0] <- sample(c(0, 1), nrow(df[df$is_gender_issue == 0, ]), replace = TRUE)
 
 test <- df[df$training == 0, ]
 train <- df[df$training == 1, ]
