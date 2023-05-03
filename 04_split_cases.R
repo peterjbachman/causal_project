@@ -10,5 +10,5 @@ test <- df[df$training == 0, ]
 train <- df[df$training == 1, ]
 
 # Write the training and test data
-write.csv(test, "data/cleaned/test_case.csv")
-write.csv(train, "data/cleaned/train_case.csv")
+write.csv(test, "data/cleaned/test_case.csv", row.names = FALSE)
+write.csv(train, "data/cleaned/train_case.csv", row.names = FALSE)
