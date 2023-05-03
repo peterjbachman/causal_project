@@ -1,16 +1,4 @@
-library(dplyr)
-
-df <- read.csv("data/uncleaned/cases_plain.csv")  %>%
-  distinct(cite, .keep_all = TRUE)
-
-# Remove cases without a female plaintiff similar to Glynn and Sen 2014\
-# Remove cases without a specific author as well.
-df <- subset(df, femplaintiff == 1 & per_curiam == "False")
-df$is_gender_issue <- ifelse(
-  df$area %in% c("employment", "Title IX", "pregnancy", "abortion", "reproductive rights"),
-  1,
-  0
-)
+df <- read.csv("data/cleaned/cleaned_cases.csv")
 
 # Set up training and test dataset
 # Evenly split data by gender and non-gender issues
