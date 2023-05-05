@@ -4,7 +4,9 @@ library(stringr)
 library(stm)
 
 train <- read.csv("data/cleaned/train_case.csv") %>%
-  select(c("casename", "circuit", "cite", "area", "enbanc", "opinion", "opinion_author", "is_gender_issue"))
+  mutate(
+    treatment = ifelse(girls > 0, 1, 0)
+  )
 
 df <- train %>%
   separate_longer_delim(opinion, delim = "\n") %>%
@@ -12,62 +14,97 @@ df <- train %>%
     word_count = str_count(opinion, pattern = "\\w+\\s+")
   ) %>%
   filter(word_count > 20) %>%
-  group_by(cite) %>%
+  group_by(casename) %>%
   mutate(
-    id = row_number(cite)
+    id = row_number(casename)
   )
 
+# plotRemoved(processed$documents, lower.thresh = seq(0, 100, by = 10))
+
 processed <- textProcessor(documents = df$opinion, metadata = df)
-out <- prepDocuments(processed$documents, processed$vocab, processed$meta, lower.thresh = 20)
-docs <- out$documents
-vocab <- out$vocab
-meta <- out$meta
+out <- prepDocuments(processed$documents, processed$vocab, processed$meta, lower.thresh = 40)
 
-plotRemoved(processed$documents, lower.thresh = seq(1, 200, by = 5))
+# This took me about 40 min so be warned
+# storage <- searchK(
+#   out$documents,
+#   out$vocab,
+#   K = c(30, 40, 50, 60, 65, 70),
+#   prevalence = ~as.factor(circuit) + enbanc + as.factor(area) + is_gender_issue,
+#   data = meta,
+#   init.type = "LDA",
+#   cores = 10, # Cores need to be set according to your computer.
+#   seed = 12345
+# )
+#
+# save(storage, file = "data/cleaned/topics_diagnose.RData")
 
-storage <- searchK(
-  out$documents,
-  out$vocab,
-  K = c(29:51),
-  prevalence = ~as.factor(circuit) + enbanc + as.factor(area) + as.factor(opinion_author) + is_gender_issue,
-  data = meta,
-  cores = 10
-)
-
-save(storage, file = "data/cleaned/test_topics.RData")
-
-# 30 topics seems about right for now?
-plot(storage)
+# 60 topics seems about right for now?
+# plot(storage)
 
 topic_fit <- stm(
   documents = out$documents,
   vocab = out$vocab,
-  K = 30,
-  prevalence = ~as.factor(circuit) + enbanc + as.factor(area) + as.factor(opinion_author) + is_gender_issue,
-  max.em.its = 100,
+  K = 60,
+  prevalence = ~as.factor(circuit) + enbanc + as.factor(area) + is_gender_issue,
+  max.em.its = 200,
   data = out$meta,
   init.type = "LDA",
+  seed = 12345
+)
+plot(topic_fit)
+
+save(topic_fit, file = "data/cleaned/topic_model.RData")
+
+# labelTopics(topic_fit, c(59))
+# findThoughts(topic_fit, texts = df$opinion, n = 5, topics = 60)$docs[[1]]
+treat_df <- df[complete.cases(df), ]
+processed <- textProcessor(documents = treat_df$opinion, metadata = treat_df)
+treat <- prepDocuments(processed$documents, processed$vocab, processed$meta, lower.thresh = 40)
+
+new <- alignCorpus(new = treat, old.vocab = topic_fit$vocab)
+ests <- fitNewDocuments(
+  model = topic_fit,
+  documents = new$documents,
+  newData = new$meta,
+  origData = out$meta,
+  prevalence = ~as.factor(circuit) + enbanc + as.factor(area) + is_gender_issue,
+  prevalencePrior = "Covariate"
 )
 
-
-topic_select <- selectModel(
-  out$documents,
-  out$vocab,
-  K = 30,
-  prevalence = ~as.factor(circuit) + enbanc + as.factor(area) + as.factor(opinion_author) + is_gender_issue,
-  max.em.its = 1000,
-  data = out$meta,
-  runs = 20,
-  seed = 12345,
-  init.type = "LDA",
+model <- estimateEffect(
+  c(13) ~ treatment,
+  stmobj = topic_fit,
+  metadata = out$meta,
+  uncertainty = "Global"
 )
-save(topic_select, file = "data/cleaned/topic_model.RData")
 
-plotModels(topic_select, pch = c(1:4), legend.position = "bottomright")
-selected_model <- topic_select$runout[[3]]
-save(selected_model, file = "data/cleaned/final_model.RData")
+topics <- ests$theta %>%
+  as.data.frame() %>%
+  mutate(topic = names(.)[max.col(.)]) %>%
+  select(topic)
 
-labelTopics(selected_model, c(15))
+treat_df <- bind_cols(treat_df, topics)
 
-findThoughts(selected_model, texts = df$opinion, n = 10, topics = 15)$docs[[1]]
-plot(selected_model, type = "perspectives", topics = c(8, 15))
+treat_df$topic <- as.numeric(str_extract(treat_df$topic, "[0-9]+"))
+treat_df$empathy <- ifelse(treat_df$topic %in% c(13, 47, 48, 50, 51), 1, 0)
+sum(treat_df$empathy)
+
+treat_long <- treat_df %>%
+  group_by(casename, topic) %>%
+  summarise(topic_weight = sum(word_count)) %>%
+  ungroup() %>%
+  pivot_wider(
+    names_from = topic,
+    names_prefix = "topic_",
+    names_sort = TRUE,
+    values_from = topic_weight,
+    values_fill = 0
+  )
+
+treat_long[, -1] <- treat_long[, -1] / apply(treat_long[,-1], 1, sum)
+
+train <- merge(train, treat_long, by = "casename")
+
+train$empathy_prop <- train$topic_13 + train$topic_47 + train$topic_48 + train$topic_50 + train$topic_51
+
+summary(lm(empathy_prop ~ girls + as.factor(area) + as.factor(circuit) + progressive.vote, train))
