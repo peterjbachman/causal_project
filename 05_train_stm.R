@@ -2,6 +2,10 @@ library(dplyr)
 library(tidyr)
 library(stringr)
 library(stm)
+library(ggplot2)
+library(lubridate)
+library(MatchIt)
+library(quickmatch)
 
 train <- read.csv("data/cleaned/train_case.csv") %>%
   mutate(
@@ -107,4 +111,22 @@ train <- merge(train, treat_long, by = "casename")
 
 train$empathy_prop <- train$topic_13 + train$topic_47 + train$topic_48 + train$topic_50 + train$topic_51
 
-summary(lm(empathy_prop ~ girls + as.factor(area) + as.factor(circuit) + progressive.vote, train))
+match_out <- matchit(
+  treatment ~ is_gender_issue + as.factor(circuit) + as.factor(area) + republican + sons + race + religion + progressive.vote,
+  method = "optimal",
+  distance = "mahalanobis",
+  data = train)
+
+plot(summary(match_out))
+
+matched_train <- match.data(match_out)
+
+summary(lm(
+  empathy_prop ~ treatment + is_gender_issue + as.factor(circuit) + as.factor(area) + republican + sons + race + religion + progressive.vote,
+  data = matched_train,
+  weights = matched_train$weights
+  )
+)
+
+train$date <- as_date(train$date)
+plot(train$date, train$topic_3)
