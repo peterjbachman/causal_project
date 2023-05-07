@@ -55,6 +55,7 @@ topic_fit <- stm(
   init.type = "LDA",
   seed = 12345
 )
+
 plot(topic_fit)
 
 save(topic_fit, file = "data/cleaned/topic_model.RData")
@@ -112,8 +113,8 @@ train <- merge(train, treat_long, by = "casename")
 train$empathy_prop <- train$topic_13 + train$topic_47 + train$topic_48 + train$topic_50 + train$topic_51
 
 match_out <- matchit(
-  treatment ~ is_gender_issue + as.factor(circuit) + as.factor(area) + republican + sons + race + religion + progressive.vote,
-  method = "optimal",
+  treatment ~ is_gender_issue + republican + sons + race + religion,
+  method = "quick",
   distance = "mahalanobis",
   data = train)
 
@@ -130,3 +131,9 @@ summary(lm(
 
 train$date <- as_date(train$date)
 plot(train$date, train$topic_3)
+
+## Results figures
+## Main results Plot
+# Example Documents
+# Hand Code validation
+# Shaded map based on circuits
