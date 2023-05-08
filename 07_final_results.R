@@ -125,8 +125,8 @@ test$empathy_prop <- test$topic_13 +
 write.csv(test, "data/cleaned/test_final.csv", row.names = FALSE)
 
 match_out <- matchit(
-  treatment ~ is_gender_issue + republican + has_son + as.factor(race) + as.factor(religion),
-  method = "quick",
+  treatment ~ is_gender_issue + republican + has_son + as.factor(race) + as.factor(religion) + as.factor(vote),
+  method = "optimal",
   data = test
 )
 
@@ -137,7 +137,7 @@ matched_test <- match.data(match_out)
 model <- lm(
   empathy_prop ~ treatment + is_gender_issue +
     as.factor(area) + republican + has_son + as.factor(race) + as.factor(religion) +
-    progressive.vote + enbanc,
+    progressive.vote + enbanc + as.factor(vote),
   data = matched_test,
   weights = matched_test$weights
 )
