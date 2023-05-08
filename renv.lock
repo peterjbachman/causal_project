@@ -161,6 +161,22 @@
       ],
       "Hash": "c39fbec8a30d23e721980b8afb31984c"
     },
+    "bayestestR": {
+      "Package": "bayestestR",
+      "Version": "0.13.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "datawizard",
+        "graphics",
+        "insight",
+        "methods",
+        "stats",
+        "utils"
+      ],
+      "Hash": "61f643ea5ee9fe0e70ab0246340b3c2e"
+    },
     "chk": {
       "Package": "chk",
       "Version": "0.8.1",
@@ -210,6 +226,22 @@
       ],
       "Hash": "f20c47fd52fae58b4e377c37bb8c335b"
     },
+    "correlation": {
+      "Package": "correlation",
+      "Version": "0.8.4",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "bayestestR",
+        "datasets",
+        "datawizard",
+        "insight",
+        "parameters",
+        "stats"
+      ],
+      "Hash": "d8bd29a9abda6eed9aaab3ba5769f231"
+    },
     "cpp11": {
       "Package": "cpp11",
       "Version": "0.4.3",
@@ -227,6 +259,19 @@
         "methods"
       ],
       "Hash": "b4c06e554f33344e044ccd7fdca750a9"
+    },
+    "datawizard": {
+      "Package": "datawizard",
+      "Version": "0.7.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "insight",
+        "stats",
+        "utils"
+      ],
+      "Hash": "001775ea47f92ef8e2916ed0cfa59735"
     },
     "distances": {
       "Package": "distances",
@@ -261,6 +306,23 @@
         "vctrs"
       ],
       "Hash": "dea6970ff715ca541c387de363ff405e"
+    },
+    "effectsize": {
+      "Package": "effectsize",
+      "Version": "0.8.3",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "bayestestR",
+        "datawizard",
+        "insight",
+        "parameters",
+        "performance",
+        "stats",
+        "utils"
+      ],
+      "Hash": "7e2f03436f6d34d7c856dc437b657274"
     },
     "fansi": {
       "Package": "fansi",
@@ -383,6 +445,19 @@
         "rlang"
       ],
       "Hash": "b44addadb528a0d227794121c00572a0"
+    },
+    "insight": {
+      "Package": "insight",
+      "Version": "0.19.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "methods",
+        "stats",
+        "utils"
+      ],
+      "Hash": "b7a721ab3228268ed3a4ac3d585a09bf"
     },
     "isoband": {
       "Package": "isoband",
@@ -515,6 +590,25 @@
       ],
       "Hash": "6b3904f13346742caa3e82dd0303d4ad"
     },
+    "modelbased": {
+      "Package": "modelbased",
+      "Version": "0.8.6",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "bayestestR",
+        "datawizard",
+        "effectsize",
+        "graphics",
+        "insight",
+        "parameters",
+        "performance",
+        "stats",
+        "utils"
+      ],
+      "Hash": "60a0171d055dc3122d7d2b6ed31e8003"
+    },
     "munsell": {
       "Package": "munsell",
       "Version": "0.5.0",
@@ -539,6 +633,39 @@
         "utils"
       ],
       "Hash": "02e3c6e7df163aafa8477225e6827bc5"
+    },
+    "parameters": {
+      "Package": "parameters",
+      "Version": "0.21.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "bayestestR",
+        "datawizard",
+        "graphics",
+        "insight",
+        "methods",
+        "stats",
+        "utils"
+      ],
+      "Hash": "8f9ce3aced4a6381a36f6314e3171718"
+    },
+    "performance": {
+      "Package": "performance",
+      "Version": "0.10.3",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "bayestestR",
+        "datawizard",
+        "insight",
+        "methods",
+        "stats",
+        "utils"
+      ],
+      "Hash": "1f296af2d4b50919aeb54be451ea2c6d"
     },
     "pillar": {
       "Package": "pillar",
@@ -691,6 +818,28 @@
         "distances"
       ],
       "Hash": "ac6e76c7353f630a3df937d47067a01d"
+    },
+    "see": {
+      "Package": "see",
+      "Version": "0.7.5",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "bayestestR",
+        "correlation",
+        "datawizard",
+        "effectsize",
+        "ggplot2",
+        "grDevices",
+        "graphics",
+        "insight",
+        "modelbased",
+        "parameters",
+        "performance",
+        "stats"
+      ],
+      "Hash": "30ff1e3252386a06f21b15956a039317"
     },
     "shape": {
       "Package": "shape",
@@ -880,6 +1029,30 @@
         "cpp11"
       ],
       "Hash": "8548b44f79a35ba1791308b61e6012d7"
+    },
+    "usmap": {
+      "Package": "usmap",
+      "Version": "0.6.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "rlang",
+        "usmapdata",
+        "utils"
+      ],
+      "Hash": "c7b18173cc51081552c62ec0c430d4c1"
+    },
+    "usmapdata": {
+      "Package": "usmapdata",
+      "Version": "0.1.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "utils"
+      ],
+      "Hash": "a0d95dc0884fc1eeed48a05757bec101"
     },
     "utf8": {
       "Package": "utf8",
