@@ -58,7 +58,8 @@ topic_fit <- stm(
 
 plot(topic_fit)
 
-save(topic_fit, file = "data/cleaned/topic_model.RData")
+# save(topic_fit, file = "data/cleaned/topic_model.RData")
+load("data/cleaned/topic_model.RData")
 
 # labelTopics(topic_fit, c(59))
 # findThoughts(topic_fit, texts = df$opinion, n = 5, topics = 60)$docs[[1]]
@@ -116,7 +117,8 @@ match_out <- matchit(
   treatment ~ is_gender_issue + republican + sons + race + religion,
   method = "quick",
   distance = "mahalanobis",
-  data = train)
+  data = train
+)
 
 plot(summary(match_out))
 
