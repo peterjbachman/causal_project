@@ -125,7 +125,8 @@ test$empathy_prop <- test$topic_13 +
 write.csv(test, "data/cleaned/test_final.csv", row.names = FALSE)
 
 match_out <- matchit(
-  treatment ~ is_gender_issue + republican + has_son + as.factor(race) + as.factor(religion) + as.factor(vote),
+  treatment ~ is_gender_issue + republican + has_son + as.factor(race) +
+    as.factor(religion) + as.factor(vote),
   method = "optimal",
   data = test
 )
@@ -136,8 +137,9 @@ matched_test <- match.data(match_out)
 
 model <- lm(
   empathy_prop ~ treatment + is_gender_issue +
-    as.factor(area) + republican + has_son + as.factor(race) + as.factor(religion) +
-    progressive.vote + enbanc + as.factor(vote),
+    as.factor(area) + republican + has_son + as.factor(race) +
+    as.factor(religion) + progressive.vote + enbanc + as.factor(vote) +
+    femplaintiff,
   data = matched_test,
   weights = matched_test$weights
 )
@@ -146,7 +148,7 @@ theme_set(theme_modern())
 effect_param <- model_parameters(model,  drop = "^as.factor")
 effect_param$Parameter <- c(
   "Intercept", "Treatment (Daughter)", "Gender Issue", "Republican",
-  "Judge Has a Son", "Progressive Vote", "En Banc Review"
+  "Judge Has a Son", "Progressive Vote", "En Banc Review", "Female Plaintiff"
 )
 
 plot(effect_param) +
@@ -156,3 +158,4 @@ plot(effect_param) +
   scale_fill_identity(c("#a51417", "#005f85"))
 
 ggsave("plots/results_figure.pdf", width = 9, height = 6, units = "in")
+
